@@ -19,14 +19,22 @@
       <section class="card form-card">
         <h2>Tambah Tugas Baru</h2>
         <form id="task-form">
-          <div class="input-group">
+          <div class="field">
+            <label for="title">Judul Tugas</label>
             <input id="title" placeholder="Judul tugas (contoh: Buat Makalah IMK)" required />
           </div>
-          <div class="input-row">
-            <input id="course" placeholder="Mata Kuliah" required />
-            <input id="deadline" type="date" required />
-            <button id="submit-btn" type="submit" class="btn-primary">Tambah Tugas</button>
+
+          <div class="field">
+            <label for="course">Mata kuliah</label>
+            <input id="course" autocomplete="off" placeholder="Contoh: Interaksi Manusia Komputer" required />
           </div>
+
+          <div class="field">
+            <label for="deadline">Deadline</label>
+            <input id="deadline" type="date" required />
+          </div>
+
+            <button id="submit-btn" type="submit" class="btn-primary">Tambah Tugas</button>
         </form>
       </section>
 
@@ -43,6 +51,11 @@
             <button data-filter="Belum Selesai">Belum Selesai</button>
             <button data-filter="Selesai">Selesai</button>
           </div>
+        </div>
+
+        <!-- Progress bar (tambahan baru) -->
+        <div class="progress" aria-hidden="true">
+          <div id="progress-bar" class="progress-bar"></div>
         </div>
       </section>
 
