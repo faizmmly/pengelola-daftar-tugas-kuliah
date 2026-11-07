@@ -20,7 +20,7 @@ body {
 
 .container { 
   width: 100%;
-  max-width: 850px;
+  max-width: 960px;
   background: var(--bg-card);
   padding: 32px;
   border-radius: var(--radius);
