@@ -18,6 +18,16 @@ const title = $<HTMLInputElement>("title");
 const course = $<HTMLInputElement>("course");
 const deadline = $<HTMLInputElement>("deadline");
 const submitBtn = $<HTMLButtonElement>("submit-btn");
+const cancelBtn = $<HTMLButtonElement>("cancel-btn");
+
+const todayStr = (): string => new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
+
+function resetFormMode(): void {
+  editingId = null;
+  form.reset();
+  submitBtn.textContent = "Tambah Tugas";
+  cancelBtn.hidden = true;
+}
 const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const statsEl = document.getElementById("stats") as HTMLElement;
 const filtersContainer = document.getElementById("filters");
@@ -119,7 +129,6 @@ function render(): void {
     .join("");
 }
 
-// Event listener untuk form tambah/edit
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   const input: TaskInput = {
@@ -127,19 +136,35 @@ form.addEventListener("submit", (e) => {
     course: course.value.trim(),
     deadline: deadline.value,
   };
-  
+
+  if (!input.title || !input.course) {
+    showToast("Judul dan mata kuliah tidak boleh kosong", "danger");
+    return;
+  }
+
+  // Tugas baru tidak boleh punya deadline yang sudah lewat
+  if (editingId === null && input.deadline < todayStr()) {
+    showToast("Deadline sudah lewat, pilih hari ini atau setelahnya", "danger");
+    deadline.focus();
+    return;
+  }
+
   if (editingId !== null) {
     store.update(editingId, input);
-    editingId = null;
-    submitBtn.textContent = "Tambah Tugas";
     showToast("Tugas berhasil diperbarui!", "success");
   } else {
     store.add({ id: Date.now(), status: "Belum Selesai", ...input });
     showToast("Tugas berhasil ditambahkan!", "success");
   }
-  
-  form.reset();
+
+  resetFormMode();
+  title.focus();
   render();
+});
+
+cancelBtn.addEventListener("click", () => {
+  resetFormMode();
+  showToast("Edit dibatalkan", "success");
 });
 
 // Event listener untuk tombol aksi di dalam list (Toggle, Edit, Hapus)
@@ -158,13 +183,15 @@ list.addEventListener("click", (e) => {
     const newStatus = task.status === "Selesai" ? "Belum Selesai" : "Selesai";
     store.update(id, { status: newStatus });
     showToast(`Status diubah menjadi ${newStatus}`, "success");
-  } else if (btn.dataset.act === "edit") {
+    } else if (btn.dataset.act === "edit") {
     title.value = task.title;
     course.value = task.course;
     deadline.value = task.deadline;
     editingId = id;
     submitBtn.textContent = "Simpan Perubahan";
+    cancelBtn.hidden = false;
     window.scrollTo({ top: 0, behavior: "smooth" });
+    title.focus({ preventScroll: true });
   }
   render();
 });

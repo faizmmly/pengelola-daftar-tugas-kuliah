@@ -316,6 +316,21 @@ header small {
   transform: translateY(0); 
 }
 
+[hidden] { display: none !important; }
+
+#task-form .btn-secondary {
+  width: 100%;
+  min-height: 44px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 10px;
+  background: #fff;
+  color: #3730a3;
+  cursor: pointer;
+}
+#task-form .btn-secondary:hover { background: #eef2ff; }
+
 .chip { display: inline-block; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: #e0e7ff; color: #3730a3; margin-left: 4px; }
 .chip-urgent { background: #ffedd5; color: #c2410c; }
 .chip-late   { background: #fee2e2; color: #b91c1c; }
