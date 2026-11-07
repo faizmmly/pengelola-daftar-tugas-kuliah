@@ -32,7 +32,8 @@
         <button type="submit" id="submit-btn">Tambah Tugas</button>
       </form>
 
-      <!-- Statistik & Filter (Bagian A) -->
+      <!-- Statistik & Filter -->
+
       <p id="stats" class="stats"></p>
       <div id="filters" class="filters">
         <button data-filter="Semua">Semua</button>
@@ -44,7 +45,36 @@
       <ul id="task-list"></ul>
     </div>
 
->>>>>>> origin/feature/filter-statistik
+      <!-- Bagian B: Penjelasan Teknologi (Dokumentasi) -->
+      <section class="penjelasan">
+        <h2>Penjelasan Teknologi yang Digunakan</h2>
+        <details open>
+          <summary>Git dan GitHub</summary>
+          <p>Git mencatat riwayat perubahan kode melalui <code>commit</code>. <code>Branch</code> dipakai untuk mengerjakan fitur secara terpisah dari kode utama, lalu digabung kembali dengan <code>merge</code> atau <code>Pull Request</code>. Jika dua branch mengubah baris yang sama, terjadi <code>merge conflict</code> yang harus diselesaikan manual. GitHub menyimpan repository secara online, sedangkan <code>push</code> mengirim commit ke GitHub dan <code>pull</code> mengambil pembaruan dari GitHub. File <code>.gitignore</code> mencegah file tertentu (seperti <code>node_modules</code> dan <code>.env</code>) ikut terunggah.</p>
+        </details>
+        <details>
+          <summary>npm</summary>
+          <p>npm adalah pengelola paket Node.js. File <code>package.json</code> menyimpan daftar <code>dependencies</code> (dibutuhkan saat aplikasi berjalan) dan <code>devDependencies</code> (hanya untuk pengembangan, seperti TypeScript dan Vite). Semantic versioning berformat MAJOR.MINOR.PATCH; misalnya <code>^5.4.0</code> mengizinkan pembaruan minor dan patch, tetapi tidak major. Perintah dijalankan lewat npm scripts: <code>npm run dev</code>, <code>npm run build</code>, dan <code>npm run preview</code>.</p>
+        </details>
+        <details>
+          <summary>TypeScript</summary>
+          <p>TypeScript adalah JavaScript dengan sistem tipe statis, sehingga kesalahan tipe terdeteksi sebelum aplikasi dijalankan. Aplikasi ini memakai tipe primitif (<code>string</code>, <code>number</code>, <code>boolean</code>), array, <code>interface</code> (<code>Task</code>), type alias dan union type (<code>Status</code>, <code>FilterStatus</code>), serta generics (<code>Store&lt;T&gt;</code>, <code>filterBy&lt;T&gt;</code>).</p>
+        </details>
+        <details>
+          <summary>Compiler, Transpiler, dan Bundler</summary>
+          <p><strong>Compiler</strong> menerjemahkan kode ke bentuk lain sambil memeriksa kesalahan; TypeScript memeriksa tipe pada tahap ini. <strong>Transpiler</strong> mengubah kode ke bahasa tingkat sama, yaitu TypeScript menjadi JavaScript yang bisa dibaca browser. <strong>Bundler</strong> menggabungkan banyak file modul (<code>main.ts</code>, <code>store.ts</code>, CSS, dan lainnya) menjadi sedikit file yang kecil dan teroptimasi untuk produksi. Pada proyek ini, Vite berperan sebagai dev server dengan hot reload sekaligus bundler saat <code>npm run build</code>.</p>
+        </details>
+        <details>
+          <summary>Vite</summary>
+          <p>Vite adalah build tool modern. Saat pengembangan, Vite menyajikan file langsung sehingga sangat cepat. Saat <code>npm run build</code>, hasilnya dikemas ke folder <code>dist/</code> yang siap diunggah ke website.</p>
+        </details>
+        <details>
+          <summary>Environment Variables</summary>
+          <p>Konfigurasi disimpan di file <code>.env</code> (tidak diunggah ke GitHub), sedangkan <code>.env.example</code> menjadi template yang aman dibagikan. Variabel berawalan <code>VITE_</code> ikut tertanam ke hasil build dan bisa dilihat siapa pun, sehingga hanya dipakai untuk data non-rahasia seperti nama dan versi aplikasi. Password dan API key rahasia tidak boleh disimpan di sini.</p>
+        </details>
+      </section>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
