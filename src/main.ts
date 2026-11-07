@@ -1,60 +1,133 @@
-import './style.css'
-import heroImg from './assets/hero.png'
-import typescriptLogo from './assets/typescript.svg'
-import viteLogo from './assets/vite.svg'
-import { setupCounter } from './counter.ts'
+import "./style.css";
+import { Store } from "./store";
+import { countBy, filterBy } from "./utils";
+import type { FilterStatus, Task, TaskInput, TaskStats } from "./types";
 
-document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-<section id="center">
-  <div class="hero">
-    <img src="${heroImg}" class="base" width="170" height="179">
-    <img src="${typescriptLogo}" class="framework" alt="TypeScript logo"/>
-    <img src="${viteLogo}" class="vite" alt="Vite logo" />
-  </div>
-  <div>
-    <h1>Get started</h1>
-    <p>Edit <code>src/main.ts</code> and save to test <code>HMR</code></p>
-  </div>
-  <button id="counter" type="button" class="counter"></button>
-</section>
+const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
+const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
+let editingId: number | null = null;
+let currentFilter: FilterStatus = "Semua";
 
-<div class="ticks"></div>
+const store = new Store<Task>("tasks");
 
-<section id="next-steps">
-  <div id="docs">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#documentation-icon"></use></svg>
-    <h2>Documentation</h2>
-    <p>Your questions, answered</p>
-    <ul>
-      <li>
-        <a href="https://vite.dev/" target="_blank">
-          <img class="logo" src="${viteLogo}" alt="" />
-          Explore Vite
-        </a>
-      </li>
-      <li>
-        <a href="https://www.typescriptlang.org" target="_blank">
-          <img class="button-icon" src="${typescriptLogo}" alt="">
-          Learn more
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div id="social">
-    <svg class="icon" role="presentation" aria-hidden="true"><use href="/icons.svg#social-icon"></use></svg>
-    <h2>Connect with us</h2>
-    <p>Join the Vite community</p>
-    <ul>
-      <li><a href="https://github.com/vitejs/vite" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#github-icon"></use></svg>GitHub</a></li>
-      <li><a href="https://chat.vite.dev/" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#discord-icon"></use></svg>Discord</a></li>
-      <li><a href="https://x.com/vite_js" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#x-icon"></use></svg>X.com</a></li>
-      <li><a href="https://bsky.app/profile/vite.dev" target="_blank"><svg class="button-icon" role="presentation" aria-hidden="true"><use href="/icons.svg#bluesky-icon"></use></svg>Bluesky</a></li>
-    </ul>
-  </div>
-</section>
+const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+const form = $<HTMLFormElement>("task-form");
+const list = $<HTMLUListElement>("task-list");
+const title = $<HTMLInputElement>("title");
+const course = $<HTMLInputElement>("course");
+const deadline = $<HTMLInputElement>("deadline");
+const submitBtn = $<HTMLButtonElement>("submit-btn");
+const statsEl = $<HTMLParagraphElement>("stats");
+const filters = $<HTMLDivElement>("filters");
 
-<div class="ticks"></div>
-<section id="spacer"></section>
-`
+$("app-title").textContent = appName;
+$("app-version").textContent = `v${appVersion}`;
+document.title = appName;
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const escapeHtml = (s: string): string =>
+  s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+
+const today = (): string => new Date().toLocaleDateString("sv-SE"); // YYYY-MM-DD
+
+const isLate = (t: Task): boolean =>
+  t.status === "Belum Selesai" && t.deadline < today();
+
+function getStats(tasks: Task[]): TaskStats {
+  return {
+    total: tasks.length,
+    selesai: countBy(tasks, (t) => t.status === "Selesai"),
+    belum: countBy(tasks, (t) => t.status === "Belum Selesai"),
+  };
+}
+
+function render(): void {
+  const all = store.getAll();
+  const stats = getStats(all);
+  statsEl.textContent = `Total: ${stats.total} • Belum Selesai: ${stats.belum} • Selesai: ${stats.selesai}`;
+
+  filters.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.filter === currentFilter);
+  });
+
+  const tasks = filterBy(
+    all,
+    (t) => currentFilter === "Semua" || t.status === currentFilter
+  ).sort((a, b) => a.deadline.localeCompare(b.deadline));
+
+  if (tasks.length === 0) {
+    list.innerHTML = `<li class="empty">${
+      all.length === 0 ? "Belum ada tugas." : "Tidak ada tugas pada filter ini."
+    }</li>`;
+    return;
+  }
+
+  list.innerHTML = tasks
+    .map(
+      (t) => `
+    <li class="task ${t.status === "Selesai" ? "done" : ""} ${isLate(t) ? "late" : ""}">
+      <div class="info">
+        <strong>${escapeHtml(t.title)}</strong>
+        <span>${escapeHtml(t.course)} • Deadline: ${escapeHtml(t.deadline)}${
+          isLate(t) ? " ⚠ Lewat deadline" : ""
+        }</span>
+        <span class="badge">${t.status}</span>
+      </div>
+      <div class="actions">
+        <button data-act="toggle" data-id="${t.id}">Ubah Status</button>
+        <button data-act="edit" data-id="${t.id}">Edit</button>
+        <button data-act="delete" data-id="${t.id}" class="danger">Hapus</button>
+      </div>
+    </li>`
+    )
+    .join("");
+}
+
+form.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const input: TaskInput = {
+    title: title.value.trim(),
+    course: course.value.trim(),
+    deadline: deadline.value,
+  };
+  if (editingId !== null) {
+    store.update(editingId, input);
+    editingId = null;
+    submitBtn.textContent = "Tambah Tugas";
+  } else {
+    store.add({ id: Date.now(), status: "Belum Selesai", ...input });
+  }
+  form.reset();
+  render();
+});
+
+filters.addEventListener("click", (e) => {
+  const btn = (e.target as HTMLElement).closest("button");
+  if (!btn) return;
+  currentFilter = btn.dataset.filter as FilterStatus;
+  render();
+});
+
+list.addEventListener("click", (e) => {
+  const btn = (e.target as HTMLElement).closest("button");
+  if (!btn) return;
+  const id = Number(btn.dataset.id);
+  const task = store.getAll().find((t) => t.id === id);
+  if (!task) return;
+
+  if (btn.dataset.act === "delete") {
+    if (confirm("Hapus tugas ini?")) store.remove(id);
+  } else if (btn.dataset.act === "toggle") {
+    store.update(id, {
+      status: task.status === "Selesai" ? "Belum Selesai" : "Selesai",
+    });
+  } else if (btn.dataset.act === "edit") {
+    title.value = task.title;
+    course.value = task.course;
+    deadline.value = task.deadline;
+    editingId = id;
+    submitBtn.textContent = "Simpan Perubahan";
+  }
+  render();
+});
+
+render();
