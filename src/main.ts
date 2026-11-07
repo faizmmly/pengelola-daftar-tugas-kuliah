@@ -5,6 +5,7 @@ import type { FilterStatus, Task, TaskInput, TaskStats } from "./types";
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
+
 let editingId: number | null = null;
 let currentFilter: FilterStatus = "Semua";
 
@@ -43,6 +44,7 @@ function getStats(tasks: Task[]): TaskStats {
 function render(): void {
   const all = store.getAll();
   const stats = getStats(all);
+
   statsEl.textContent = `Total: ${stats.total} • Belum Selesai: ${stats.belum} • Selesai: ${stats.selesai}`;
 
   filters.querySelectorAll<HTMLButtonElement>("button").forEach((b) => {
@@ -89,6 +91,7 @@ form.addEventListener("submit", (e) => {
     course: course.value.trim(),
     deadline: deadline.value,
   };
+
   if (editingId !== null) {
     store.update(editingId, input);
     editingId = null;
@@ -96,6 +99,7 @@ form.addEventListener("submit", (e) => {
   } else {
     store.add({ id: Date.now(), status: "Belum Selesai", ...input });
   }
+
   form.reset();
   render();
 });
