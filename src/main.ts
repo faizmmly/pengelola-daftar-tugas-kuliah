@@ -1,6 +1,6 @@
 import "./style.css";
 import { Store } from "./store";
-import type { Task, TaskInput } from "./type";
+import type { Task, TaskInput } from "./types";
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";

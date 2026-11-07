@@ -6,6 +6,7 @@
     <title>Pengelola Daftar Tugas Kuliah</title>
   </head>
   <body>
+
     <main class="container">
       <header>
         <h1 id="app-title"></h1>
@@ -21,6 +22,29 @@
 
       <ul id="task-list"></ul>
     </main>
+
+    <div id="app">
+      <!-- Form Input Tugas -->
+      <form id="task-form">
+        <input type="text" id="title" placeholder="Judul tugas..." required />
+        <input type="text" id="course" placeholder="Mata kuliah..." required />
+        <input type="date" id="deadline" required />
+        <button type="submit" id="submit-btn">Tambah Tugas</button>
+      </form>
+
+      <!-- Statistik & Filter (Bagian A) -->
+      <p id="stats" class="stats"></p>
+      <div id="filters" class="filters">
+        <button data-filter="Semua">Semua</button>
+        <button data-filter="Belum Selesai">Belum Selesai</button>
+        <button data-filter="Selesai">Selesai</button>
+      </div>
+
+      <!-- Daftar Tugas -->
+      <ul id="task-list"></ul>
+    </div>
+
+>>>>>>> origin/feature/filter-statistik
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
