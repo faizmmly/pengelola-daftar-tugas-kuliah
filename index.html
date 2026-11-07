@@ -7,33 +7,51 @@
   </head>
   <body>
     <main class="container">
-      <header>
-        <h1 id="app-title"></h1>
-        <small id="app-version"></small>
+      <header class="app-header">
+        <div>
+          <h1 id="app-title"></h1>
+          <p class="app-subtitle">Kelola tugas kuliah dengan mudah dan terstruktur</p>
+        </div>
+        <small id="app-version" class="version-badge"></small>
       </header>
 
       <!-- Form Input Tugas -->
-      <form id="task-form">
-        <input id="title" placeholder="Judul tugas" required />
-        <input id="course" placeholder="Mata kuliah" required />
-        <input id="deadline" type="date" required />
-        <button id="submit-btn" type="submit">Tambah Tugas</button>
-      </form>
+      <section class="card form-card">
+        <h2>Tambah Tugas Baru</h2>
+        <form id="task-form">
+          <div class="input-group">
+            <input id="title" placeholder="Judul tugas (contoh: Buat Makalah IMK)" required />
+          </div>
+          <div class="input-row">
+            <input id="course" placeholder="Mata Kuliah" required />
+            <input id="deadline" type="date" required />
+            <button id="submit-btn" type="submit" class="btn-primary">Tambah Tugas</button>
+          </div>
+        </form>
+      </section>
 
-      <!-- Statistik & Filter -->
-      <p id="stats" class="stats"></p>
-      <div id="filters" class="filters">
-        <button data-filter="Semua">Semua</button>
-        <button data-filter="Belum Selesai">Belum Selesai</button>
-        <button data-filter="Selesai">Selesai</button>
-      </div>
+      <!-- Pencarian & Filter & Statistik -->
+      <section class="control-section">
+        <div class="search-box">
+          <input type="text" id="search-input" placeholder="🔍 Cari judul atau mata kuliah..." />
+        </div>
+        
+        <div class="filter-stats-wrapper">
+          <p id="stats" class="stats"></p>
+          <div id="filters" class="filters">
+            <button data-filter="Semua" class="active">Semua</button>
+            <button data-filter="Belum Selesai">Belum Selesai</button>
+            <button data-filter="Selesai">Selesai</button>
+          </div>
+        </div>
+      </section>
 
       <!-- Daftar Tugas -->
-      <ul id="task-list"></ul>
+      <ul id="task-list" class="task-list"></ul>
 
-      <!-- Bagian B: Penjelasan Teknologi (Dokumentasi) -->
+      <!-- Bagian Dokumentasi Teknologi -->
       <section class="penjelasan">
-        <h2>Penjelasan Teknologi yang Digunakan</h2>
+        <h2>📚 Penjelasan Teknologi yang Digunakan</h2>
         <details open>
           <summary>Git dan GitHub</summary>
           <p>Git mencatat riwayat perubahan kode melalui <code>commit</code>. <code>Branch</code> dipakai untuk mengerjakan fitur secara terpisah dari kode utama, lalu digabung kembali dengan <code>merge</code> atau <code>Pull Request</code>. Jika dua branch mengubah baris yang sama, terjadi <code>merge conflict</code> yang harus diselesaikan manual. GitHub menyimpan repository secara online, sedangkan <code>push</code> mengirim commit ke GitHub dan <code>pull</code> mengambil pembaruan dari GitHub. File <code>.gitignore</code> mencegah file tertentu (seperti <code>node_modules</code> dan <code>.env</code>) ikut terunggah.</p>
@@ -61,6 +79,20 @@
       </section>
     </main>
 
+    <div id="toast" class="toast">Notifikasi</div>
+
     <script type="module" src="/src/main.ts"></script>
+
+    <!-- Custom Confirmation Modal -->
+    <div id="confirm-modal" class="modal-overlay">
+      <div class="modal-card">
+        <h3>Konfirmasi Hapus</h3>
+        <p>Apakah Anda yakin ingin menghapus tugas ini?</p>
+        <div class="modal-actions">
+          <button id="modal-cancel" class="btn-cancel">Batal</button>
+          <button id="modal-confirm" class="btn-confirm-danger">Hapus</button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
