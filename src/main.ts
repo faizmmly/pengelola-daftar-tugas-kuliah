@@ -1,6 +1,7 @@
 import "./style.css";
 import { Store } from "./store";
 import type { Task, TaskInput, FilterStatus } from "./types";
+import { daysLeft, deadlineLabel, formatDate } from "./utils";
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
@@ -67,34 +68,54 @@ function render(): void {
   // Hitung statistik tugas
   const total = allTasks.length;
   const completedCount = allTasks.filter((t) => t.status === "Selesai").length;
+  const percent = total === 0 ? 0 : Math.round((completedCount / total) * 100);
   if (statsEl) {
-    statsEl.textContent = `Total: ${total} tugas | Selesai: ${completedCount} | Belum: ${total - completedCount}`;
+    statsEl.textContent = `Total: ${total} tugas | Selesai: ${completedCount} | Belum: ${total - completedCount} | ${percent}%`;
   }
+  const bar = document.getElementById("progress-bar");
+  if (bar) bar.style.width = `${percent}%`;
 
-  if (filteredTasks.length === 0) {
-    list.innerHTML = `<li class="empty-state">Tidak ada tugas yang ditemukan.</li>`;
+    if (filteredTasks.length === 0) {
+    list.innerHTML = `
+      <li class="empty-state">
+        <span class="empty-icon">${total === 0 ? "📝" : "🔍"}</span>
+        <p>${total === 0 ? "Belum ada tugas. Tambahkan tugas pertamamu di atas!" : "Tidak ada tugas yang cocok."}</p>
+      </li>`;
     return;
   }
 
+  // Urutkan: belum selesai dulu, lalu deadline terdekat
+  filteredTasks.sort((a, b) => {
+    if (a.status !== b.status) return a.status === "Belum Selesai" ? -1 : 1;
+    return a.deadline.localeCompare(b.deadline);
+  });
+
   list.innerHTML = filteredTasks
-    .map(
-      (t) => `
-    <li class="task-item">
+    .map((t) => {
+      const days = daysLeft(t.deadline);
+      const done = t.status === "Selesai";
+      const late = !done && days < 0;
+      const urgent = !done && days >= 0 && days <= 1;
+      const state = done ? "is-done" : late ? "is-late" : urgent ? "is-urgent" : "is-pending";
+      const chip = done ? "" : `<span class="chip ${late ? "chip-late" : urgent ? "chip-urgent" : ""}">${deadlineLabel(days)}</span>`;
+
+      return `
+    <li class="task-item ${state}">
       <div class="task-info">
         <h3>${escapeHtml(t.title)}</h3>
         <div class="task-meta">
-          <span>📚 ${escapeHtml(t.course)}</span>
-          <span>📅 Deadline: ${escapeHtml(t.deadline)}</span>
-          <span class="badge ${t.status === "Selesai" ? "selesai" : "belum"}">${t.status}</span>
+          <span class="meta-course">📚 ${escapeHtml(t.course)}</span>
+          <span class="meta-deadline">📅 ${formatDate(t.deadline)} ${chip}</span>
+          <span class="badge ${done ? "selesai" : "belum"}">${t.status}</span>
         </div>
       </div>
       <div class="task-actions">
-        <button data-act="toggle" data-id="${t.id}" class="btn-toggle">Ubah Status</button>
+        <button data-act="toggle" data-id="${t.id}" class="btn-toggle">${done ? "↩ Batalkan" : "✓ Selesai"}</button>
         <button data-act="edit" data-id="${t.id}" class="btn-edit">Edit</button>
         <button data-act="delete" data-id="${t.id}" class="btn-delete">Hapus</button>
       </div>
-    </li>`
-    )
+    </li>`;
+    })
     .join("");
 }
 
