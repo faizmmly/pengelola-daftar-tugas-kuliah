@@ -1,20 +1,229 @@
 
-* { box-sizing: border-box; }
-body { margin: 0; font-family: system-ui, sans-serif; background: #f3f4f6; color: #111827; }
-.container { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem; }
-header { display: flex; align-items: baseline; gap: .5rem; }
-form { display: grid; gap: .5rem; grid-template-columns: 1fr; margin: 1rem 0; }
-input, button { padding: .6rem .8rem; font-size: 1rem; border-radius: 8px; border: 1px solid #d1d5db; }
-button { background: #2563eb; color: #fff; border: 0; cursor: pointer; }
-button.danger { background: #dc2626; }
-ul { list-style: none; padding: 0; display: grid; gap: .75rem; }
-.task { background: #fff; padding: 1rem; border-radius: 12px; display: flex; flex-direction: column; gap: .75rem; }
-.info { display: flex; flex-direction: column; gap: .25rem; }
-.badge { width: fit-content; font-size: .8rem; padding: .15rem .6rem; border-radius: 999px; background: #fef3c7; }
-.done .badge { background: #d1fae5; }
-.done strong { text-decoration: line-through; opacity: .6; }
-.actions { display: flex; gap: .5rem; flex-wrap: wrap; }
-.actions button { padding: .4rem .7rem; font-size: .9rem; }
+* { 
+  box-sizing: border-box; 
+}
+
+.container { 
+  width: 100%;
+  max-width: 800px;
+  background: var(--card-bg);
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+header { 
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--primary-color);
+}
+
+header small {
+  color: #64748b;
+}
+
+/* Form Styling */
+#task-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+#task-form input {
+  flex: 1;
+  min-width: 150px;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#task-form input:focus {
+  border-color: var(--primary-color);
+}
+
+#submit-btn {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#submit-btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Filter & Stats Styling */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.filters button {
+  background-color: #e2e8f0;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.filters button:hover, .filters button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.stats {
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 12px;
+}
+
+/* Task List Styling */
+#task-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#task-list li {
+  background: #f1f5f9;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.task { 
+  background: #fff; 
+  padding: 1rem; 
+  border-radius: 12px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: .75rem; 
+}
+
+/* Documentation Section Styling */
+.penjelasan {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px dashed var(--border-color);
+}
+
+.penjelasan h2 {
+  font-size: 1.25rem;
+  margin-bottom: 16px;
+  color: var(--primary-color);
+}
+
+.penjelasan details {
+  background: #f8fafc;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+}
+
+.penjelasan summary {
+  font-weight: 600;
+  cursor: pointer;
+  color: #334155;
+}
+
+.penjelasan p {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+form { 
+  display: grid; 
+  gap: .5rem; 
+  grid-template-columns: 1fr; 
+  margin: 1rem 0; 
+}
+
+input, button { 
+  padding: .6rem .8rem; 
+  font-size: 1rem; 
+  border-radius: 8px; 
+  border: 1px solid #d1d5db; 
+}
+
+button { 
+  background: #2563eb; 
+  color: #fff; 
+  border: 0; 
+  cursor: pointer; 
+}
+
+button.danger { 
+  background: #dc2626; 
+}
+
+ul { 
+  list-style: none; 
+  padding: 0; 
+  display: grid; 
+  gap: .75rem; 
+}
+
+.info { 
+  display: flex; 
+  flex-direction: column; 
+  gap: .25rem; 
+}
+
+.badge { 
+  width: fit-content; 
+  font-size: .8rem; 
+  padding: .15rem .6rem; 
+  border-radius: 999px; 
+  background: #fef3c7; 
+}
+
+.done .badge { 
+  background: #d1fae5; 
+}
+
+.done strong { 
+  text-decoration: line-through; 
+  opacity: .6; 
+}
+
+.actions { 
+  display: flex; 
+  gap: .5rem; 
+  flex-wrap: wrap; 
+}
+
+.actions button { 
+  padding: .4rem .7rem; 
+  font-size: .9rem; 
+}
+
 @media (min-width: 640px) {
   form { grid-template-columns: 2fr 2fr 1fr auto; }
   .task { flex-direction: row; justify-content: space-between; align-items: center; }
@@ -27,6 +236,12 @@ ul { list-style: none; padding: 0; display: grid; gap: .75rem; }
   --border: #e5e4e7;
   --code-bg: #f4f3ec;
   --accent: #aa3bff;
+  --primary-color: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --text-color: #1e293b;
+  --border-color: #e2e8f0;
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
@@ -73,7 +288,13 @@ ul { list-style: none; padding: 0; display: grid; gap: .75rem; }
 }
 
 body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 h1,
