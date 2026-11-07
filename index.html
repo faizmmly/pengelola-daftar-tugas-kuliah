@@ -6,13 +6,13 @@
     <title>Pengelola Daftar Tugas Kuliah</title>
   </head>
   <body>
-
     <main class="container">
       <header>
         <h1 id="app-title"></h1>
         <small id="app-version"></small>
       </header>
 
+      <!-- Form Input Tugas -->
       <form id="task-form">
         <input id="title" placeholder="Judul tugas" required />
         <input id="course" placeholder="Mata kuliah" required />
@@ -20,20 +20,7 @@
         <button id="submit-btn" type="submit">Tambah Tugas</button>
       </form>
 
-      <ul id="task-list"></ul>
-    </main>
-
-    <div id="app">
-      <!-- Form Input Tugas -->
-      <form id="task-form">
-        <input type="text" id="title" placeholder="Judul tugas..." required />
-        <input type="text" id="course" placeholder="Mata kuliah..." required />
-        <input type="date" id="deadline" required />
-        <button type="submit" id="submit-btn">Tambah Tugas</button>
-      </form>
-
       <!-- Statistik & Filter -->
-
       <p id="stats" class="stats"></p>
       <div id="filters" class="filters">
         <button data-filter="Semua">Semua</button>
@@ -43,7 +30,6 @@
 
       <!-- Daftar Tugas -->
       <ul id="task-list"></ul>
-    </div>
 
       <!-- Bagian B: Penjelasan Teknologi (Dokumentasi) -->
       <section class="penjelasan">
@@ -73,7 +59,7 @@
           <p>Konfigurasi disimpan di file <code>.env</code> (tidak diunggah ke GitHub), sedangkan <code>.env.example</code> menjadi template yang aman dibagikan. Variabel berawalan <code>VITE_</code> ikut tertanam ke hasil build dan bisa dilihat siapa pun, sehingga hanya dipakai untuk data non-rahasia seperti nama dan versi aplikasi. Password dan API key rahasia tidak boleh disimpan di sini.</p>
         </details>
       </section>
-    </div>
+    </main>
 
     <script type="module" src="/src/main.ts"></script>
   </body>
