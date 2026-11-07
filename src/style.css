@@ -696,6 +696,21 @@ ul {
   font-size: .9rem; 
 }
 
+.sort-box { display: flex; align-items: center; gap: .5rem; margin: .75rem 0; }
+.sort-box label { font-size: .85rem; font-weight: 600; color: #4338ca; }
+.sort-box select {
+  flex: 1;
+  min-height: 44px;
+  padding: .4rem .8rem;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 10px;
+  background: #fff;
+  font-size: .95rem;
+  color: #111827;
+}
+.sort-box select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, .15); }
+.sort-box select option { color: #111827; background: #fff; }
+
 /* Responsive Mobile */
 @media (max-width: 600px) {
   .container {

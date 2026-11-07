@@ -29,3 +29,8 @@ export function formatDate(deadline: string): string {
     year: "numeric",
   });
 }
+
+// Generic: bisa dipakai untuk array tipe apa pun, tidak mengubah array asli
+export function sortItems<T>(items: T[], compare: (a: T, b: T) => number): T[] {
+  return [...items].sort(compare);
+}
