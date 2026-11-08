@@ -1,5 +1,6 @@
 export type Status = "Belum Selesai" | "Selesai"; // type alias + union type
 export type FilterStatus = "Semua" | Status; // union type lanjutan
+export type SortBy = "deadline" | "terbaru" | "nama"; // union type
 
 export interface Task {
   id: number; // number

@@ -1,12 +1,24 @@
 import "./style.css";
 import { Store } from "./store";
-import type { Task, TaskInput, FilterStatus } from "./types";
-import { daysLeft, deadlineLabel, formatDate } from "./utils";
+import type { Task, TaskInput, FilterStatus, SortBy } from "./types";
+import { daysLeft, deadlineLabel, formatDate, sortItems } from "./utils";
+
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
 let editingId: number | null = null;
 let currentFilter: FilterStatus = "Semua"; // Status filter aktif
+let currentSort: SortBy = "deadline";
+
+const comparators: Record<SortBy, (a: Task, b: Task) => number> = {
+  deadline: (a, b) => {
+    if (a.status !== b.status) return a.status === "Belum Selesai" ? -1 : 1;
+    return a.deadline.localeCompare(b.deadline);
+  },
+  terbaru: (a, b) => b.id - a.id,
+  nama: (a, b) => a.title.localeCompare(b.title, "id"),
+};
+const sortSelect = document.getElementById("sort-select") as HTMLSelectElement;
 let pendingDeleteId: number | null = null; // Menyimpan ID tugas untuk modal hapus
 
 const store = new Store<Task>("tasks");
@@ -94,13 +106,9 @@ function render(): void {
     return;
   }
 
-  // Urutkan: belum selesai dulu, lalu deadline terdekat
-  filteredTasks.sort((a, b) => {
-    if (a.status !== b.status) return a.status === "Belum Selesai" ? -1 : 1;
-    return a.deadline.localeCompare(b.deadline);
-  });
+  const sortedTasks = sortItems(filteredTasks, comparators[currentSort]);
 
-  list.innerHTML = filteredTasks
+  list.innerHTML = sortedTasks
     .map((t) => {
       const days = daysLeft(t.deadline);
       const done = t.status === "Selesai";
@@ -220,6 +228,14 @@ if (btnConfirmModal && confirmModal) {
 // Event listener untuk kotak pencarian (Real-time search)
 if (searchInput) {
   searchInput.addEventListener("input", () => {
+    render();
+  });
+}
+
+
+if (sortSelect) {
+  sortSelect.addEventListener("change", () => {
+    currentSort = sortSelect.value as SortBy;
     render();
   });
 }
