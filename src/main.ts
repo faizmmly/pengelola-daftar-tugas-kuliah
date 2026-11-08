@@ -1,7 +1,7 @@
 import "./style.css";
 import { Store } from "./store";
 import type { Task, TaskInput, FilterStatus, SortBy } from "./types";
-import { daysLeft, deadlineLabel, formatDate, sortItems, computeDetailedStats } from "./utils";
+import { daysLeft, deadlineLabel, formatDate, sortItems, computeDetailedStats, computeReminder } from "./utils";
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
@@ -43,6 +43,7 @@ const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const statsEl = document.getElementById("stats") as HTMLElement;
 const filtersContainer = document.getElementById("filters");
 const statsDetail = document.getElementById("stats-detail");
+const reminderEl = document.getElementById("reminder-banner");
 
 // Elemen Modal Kustom & Toast
 const confirmModal = document.getElementById("confirm-modal");
@@ -93,6 +94,24 @@ function renderDetailedStats(tasks: Task[]): void {
     }`;
 }
 
+function renderReminder(tasks: Task[]): void {
+  if (!reminderEl) return;
+  const r = computeReminder(tasks);
+
+  if (r.today === 0 && r.late === 0) {
+    reminderEl.hidden = true;
+    return;
+  }
+
+  const parts: string[] = [];
+  if (r.late > 0) parts.push(`${r.late} tugas lewat deadline`);
+  if (r.today > 0) parts.push(`${r.today} tugas jatuh tempo hari ini`);
+
+  reminderEl.className = `reminder ${r.late > 0 ? "reminder-late" : "reminder-today"}`;
+  reminderEl.textContent = `⏰ ${parts.join(" • ")}`;
+  reminderEl.hidden = false;
+}
+
 function render(): void {
   const allTasks = store.getAll();
   const keyword = searchInput ? searchInput.value.toLowerCase() : "";
@@ -122,6 +141,7 @@ function render(): void {
   if (bar) bar.style.width = `${percent}%`;
 
    renderDetailedStats(allTasks);
+   renderReminder(allTasks);
 
     if (filteredTasks.length === 0) {
     list.innerHTML = `
