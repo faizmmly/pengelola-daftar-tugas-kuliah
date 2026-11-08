@@ -16,5 +16,13 @@ export interface TaskStats {
   belum: number;
 }
 
-
 export type TaskInput = Omit<Task, "id" | "status">;
+
+export interface DetailedStats {
+  total: number;
+  selesai: number;
+  belum: number;
+  lewat: number; // belum selesai dan lewat deadline
+  mingguIni: number; // belum selesai, deadline 0-7 hari ke depan
+  perCourse: Record<string, number>; // jumlah tugas per mata kuliah
+}

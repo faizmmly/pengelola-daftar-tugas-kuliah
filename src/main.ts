@@ -1,8 +1,7 @@
 import "./style.css";
 import { Store } from "./store";
 import type { Task, TaskInput, FilterStatus, SortBy } from "./types";
-import { daysLeft, deadlineLabel, formatDate, sortItems } from "./utils";
-
+import { daysLeft, deadlineLabel, formatDate, sortItems, computeDetailedStats } from "./utils";
 
 const appName: string = import.meta.env.VITE_APP_NAME ?? "Daftar Tugas";
 const appVersion: string = import.meta.env.VITE_APP_VERSION ?? "0.0.0";
@@ -43,6 +42,7 @@ function resetFormMode(): void {
 const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const statsEl = document.getElementById("stats") as HTMLElement;
 const filtersContainer = document.getElementById("filters");
+const statsDetail = document.getElementById("stats-detail");
 
 // Elemen Modal Kustom & Toast
 const confirmModal = document.getElementById("confirm-modal");
@@ -67,6 +67,30 @@ function showToast(message: string, type: "success" | "danger" = "success") {
   setTimeout(() => {
     toast.className = "toast";
   }, 3000);
+}
+
+function renderDetailedStats(tasks: Task[]): void {
+  if (!statsDetail) return;
+  const s = computeDetailedStats(tasks);
+  const wasOpen = statsDetail.querySelector("details")?.open ?? false;
+
+  const courses = Object.entries(s.perCourse)
+    .sort((a, b) => b[1] - a[1])
+    .map(([name, count]) => `<li><span>${escapeHtml(name)}</span><strong>${count}</strong></li>`)
+    .join("");
+
+  statsDetail.innerHTML = `
+    <div class="stat-card stat-late"><strong>${s.lewat}</strong><span>Lewat deadline</span></div>
+    <div class="stat-card stat-week"><strong>${s.mingguIni}</strong><span>7 hari ke depan</span></div>
+    <div class="stat-card stat-done"><strong>${s.selesai}</strong><span>Selesai</span></div>
+    ${
+      courses
+        ? `<details class="course-stats" ${wasOpen ? "open" : ""}>
+            <summary>Tugas per mata kuliah</summary>
+            <ul>${courses}</ul>
+          </details>`
+        : ""
+    }`;
 }
 
 function render(): void {
@@ -96,6 +120,8 @@ function render(): void {
   }
   const bar = document.getElementById("progress-bar");
   if (bar) bar.style.width = `${percent}%`;
+
+   renderDetailedStats(allTasks);
 
     if (filteredTasks.length === 0) {
     list.innerHTML = `
