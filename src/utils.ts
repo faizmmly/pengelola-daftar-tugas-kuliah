@@ -1,4 +1,5 @@
-import type { Task, DetailedStats } from "./types";
+import type { Task, DetailedStats, Reminder } from "./types";
+
 
 export function filterBy<T>(items: T[], predicate: (item: T) => boolean): T[] {
   return items.filter(predicate);
@@ -56,5 +57,13 @@ export function computeDetailedStats(tasks: Task[]): DetailedStats {
       return d >= 0 && d <= 7;
     }).length,
     perCourse,
+  };
+}
+
+export function computeReminder(tasks: Task[]): Reminder {
+  const pending = tasks.filter((t) => t.status === "Belum Selesai");
+  return {
+    today: pending.filter((t) => daysLeft(t.deadline) === 0).length,
+    late: pending.filter((t) => daysLeft(t.deadline) < 0).length,
   };
 }

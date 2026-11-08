@@ -26,3 +26,8 @@ export interface DetailedStats {
   mingguIni: number; // belum selesai, deadline 0-7 hari ke depan
   perCourse: Record<string, number>; // jumlah tugas per mata kuliah
 }
+
+export interface Reminder {
+  today: number; // belum selesai, deadline hari ini
+  late: number; // belum selesai, deadline sudah lewat
+}
