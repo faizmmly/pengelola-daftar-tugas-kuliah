@@ -48,7 +48,8 @@
   pointer-events: none;
 }
 .toast.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.toast.success { background-color: #10b981; }
+
+.toast.success { background-color: #059669; }
 .toast.danger  { background-color: #ef4444; }
 
 /* Modal konfirmasi */
