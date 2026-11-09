@@ -1,0 +1,26 @@
+@media (max-width: 600px) {
+  .container { padding: 16px; }
+  .task-item { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .task-actions { width: 100%; justify-content: flex-end; }
+  .filter-stats-wrapper { flex-direction: column; align-items: stretch; }
+}
+
+@media (min-width: 640px) {
+  button { min-height: 44px; }
+}
+
+@media (max-width: 639px) {
+  .task-item { flex-direction: column; align-items: stretch; gap: 12px; }
+  .task-actions { width: 100%; }
+  .task-actions button { flex: 1; min-height: 44px; }
+}
+
+@media (max-width: 479px) {
+  .stat-card strong { font-size: 1.25rem; }
+  .stat-card span { font-size: .7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-item { animation: none; }
+  .progress-bar { transition: none; }
+}
