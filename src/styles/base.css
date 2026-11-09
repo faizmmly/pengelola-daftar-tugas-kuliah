@@ -123,7 +123,7 @@ ul { list-style: none; padding: 0; display: grid; gap: .75rem; }
   border-bottom: 1px solid var(--border);
   padding-bottom: 16px;
 }
-.app-header h1 { font-size: 1.5rem; color: var(--primary); font-weight: 700; }
+.app-header h1 { font-size: 1.5rem; color: var(--primary); font-weight: 700; text-align: left; margin: 0;}
 .app-subtitle { font-size: 0.875rem; color: var(--text-muted); }
 .version-badge {
   background: #e0e7ff;
@@ -133,6 +133,8 @@ ul { list-style: none; padding: 0; display: grid; gap: .75rem; }
   font-weight: 600;
   font-size: 0.75rem;
 }
+
+.app-header > div { text-align: left; }
 
 header { margin-bottom: 24px; text-align: center; }
 header h1 { margin: 0; font-size: 1.75rem; color: var(--primary-color); }
