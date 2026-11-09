@@ -1,15 +1,5 @@
 /* Sisa gaya lama: lihat catatan di bawah */
 #task-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
-#task-list li {
-  background: #f1f5f9;
-  padding: 16px;
-  border-radius: 8px;
-  border-left: 4px solid var(--primary-color);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
 
 .task-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
 
@@ -72,6 +62,7 @@
 .badge.belum   { background: #fef3c7; color: #92400e; }
 
 .empty-state {
+  display: block;
   text-align: center;
   padding: 2rem 1rem;
   color: #64748b;
