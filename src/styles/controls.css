@@ -1,0 +1,60 @@
+.control-section { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+#search-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  color: #1e293b;
+}
+#search-input::placeholder { color: #94a3b8; }
+
+.filter-stats-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filters { display: flex; gap: 6px; }
+.filters button {
+  background: #e2e8f0;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+.filters button:hover, .filters button.active { background-color: var(--primary); color: white; }
+
+.stats { font-size: 0.875rem; font-weight: 600; color: var(--text-muted); }
+
+.progress { height: 8px; background: #e0e7ff; border-radius: 999px; overflow: hidden; margin: .5rem 0 1rem; }
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: linear-gradient(90deg, #4f46e5, #22c55e);
+  border-radius: 999px;
+  transition: width .5s ease;
+}
+
+.sort-box { display: flex; align-items: center; gap: .5rem; margin: .75rem 0; }
+.sort-box label { font-size: .85rem; font-weight: 600; color: #4338ca; }
+.sort-box select {
+  flex: 1;
+  min-height: 44px;
+  padding: .4rem .8rem;
+  border: 1.5px solid #c7d2fe;
+  border-radius: 10px;
+  background: #fff;
+  font-size: .95rem;
+  color: #111827;
+}
+.sort-box select:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, .15); }
+.sort-box select option { color: #111827; background: #fff; }
